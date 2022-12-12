@@ -578,7 +578,7 @@ form zf_call_mm03.
   if sy-subrc is initial.
 
     set parameter id 'MAT' field <fs_ret_10>-matnr.
-*
+
     call transaction 'MM03' and skip first screen.
 
 *    SUBMIT sapmmg01 USING SELECTION-SCREEN 1000 WITH p_matnr EQ <fs_ret_10>-matnr.
