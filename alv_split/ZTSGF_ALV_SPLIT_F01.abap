@@ -6,11 +6,11 @@
 *&---------------------------------------------------------------------*
 form zf_create_containers.
 
-  if v_grid is bound. return. endif.
+  if v_first_grid is bound. return. endif.
 
-  create object v_grid
+  create object v_first_grid
     exporting
-      container_name = 'V_GRID'.
+      container_name = c_grid.
 
   perform: zf_create_first_splitter,
            zf_create_second_splitter.
@@ -22,12 +22,14 @@ endform.                    "zf_create_containers
 form zf_alv_split.
 
   perform: zf_read_ztbca_ret_10 changing t_ret_10.
+
   perform zf_read_ztbca_ret_11 using t_ret_10
                             changing t_ret_11.
+
   perform zf_read_ztbpp_cons_99 using t_ret_11
                              changing t_cons_99.
 
-  call screen 9010.
+  call screen 9000.
 
 endform.                    " ZF_ALV_SPLIT
 *&---------------------------------------------------------------------*
@@ -86,7 +88,7 @@ form zf_create_field_cat changing pt_fieldcat type lvc_t_fcat.
 
   call function 'LVC_FIELDCATALOG_MERGE'
     exporting
-      i_structure_name       = 'ZSTGF_ALV_SPLIT1'
+      i_structure_name       = c_structure_name-firstalv
     changing
       ct_fieldcat            = pt_fieldcat
     exceptions                                              "#EC *
@@ -112,12 +114,10 @@ endform.                    " ZF_CREATE_ALV
 *&---------------------------------------------------------------------*
 form zf_second_alv.
 *
-  perform: "zf_create_splitter,
+  perform: "zf_create_splitter.
            zf_config_splitter.
 
   perform zf_get_right_row changing t_ret_11_aux.
-
-
 
   perform zf_prepare_second_alv changing t_ret_11_aux.
 
@@ -136,14 +136,16 @@ form zf_create_handler changing p_handler type ref to lcl_event_receiver.
 
 endform.                    " ZF_CREATE_HANDLER
 *&---------------------------------------------------------------------*
-*&      Form  ZF_SET_STATUS_9010
+*&      Form  ZF_SET_STATUS_9000
 *&---------------------------------------------------------------------*
-form zf_set_status_9010.
+form zf_set_status_9000.
+
   set pf-status 'ZSTS_ALV'.
   set titlebar 'ZUTS_ALV'.
-endform.                    " ZF_SET_STATUS_9010
+
+endform.                    " ZF_SET_STATUS_9000
 *&---------------------------------------------------------------------*
-*&      Form  ZF_CREATE_SPLITTER
+*&      Form  ZF_CREATE_FIRST_SPLITTER
 *&---------------------------------------------------------------------*
 form zf_create_first_splitter.
 
@@ -151,7 +153,7 @@ form zf_create_first_splitter.
 
   create object v_splitter1
     exporting
-      parent            = v_grid
+      parent            = v_first_grid
       rows              = 2
       columns           = 1
     exceptions
@@ -178,9 +180,9 @@ form zf_create_first_splitter.
       others            = 3.
 
   v_principal_grid = v_splitter1->get_container( row = 1 column = 1 ).
-  v_grid2 = v_splitter1->get_container( row = 2 column = 1 ).
+  v_second_grid = v_splitter1->get_container( row = 2 column = 1 ).
 
-endform.                    " ZF_CREATE_SPLITTER
+endform.                    " ZF_CREATE_FIRST_SPLITTER
 *&---------------------------------------------------------------------*
 *&      Form  ZF_CONFIG_SPLITTER
 *&---------------------------------------------------------------------*
@@ -256,7 +258,7 @@ form zf_create_second_field_cat changing pt_fieldcat type lvc_t_fcat.
 
   call function 'LVC_FIELDCATALOG_MERGE'
     exporting
-      i_structure_name       = 'ZSTGF_ALV_SPLIT2'
+      i_structure_name       = c_structure_name-secondalv
     changing
       ct_fieldcat            = pt_fieldcat
     exceptions                                              "#EC *
@@ -275,7 +277,6 @@ form zf_create_second_alv.
   create object v_itens_alv
     exporting
       i_parent = v_item_grid.
-
 
 endform.                    " ZF_CREATE_SECOND_ALV
 *&---------------------------------------------------------------------*
@@ -425,7 +426,7 @@ form zf_create_third_field_cat  changing pt_fieldcat type lvc_t_fcat.
 
   call function 'LVC_FIELDCATALOG_MERGE'
     exporting
-      i_structure_name       = 'ZSTGF_ALV_SPLIT3'
+      i_structure_name       = c_structure_name-thirdalv
     changing
       ct_fieldcat            = pt_fieldcat
     exceptions                                              "#EC *
@@ -518,7 +519,6 @@ form zf_get_selected_rows changing pt_selected_rows type lvc_t_row
 
   endloop.
 
-
 endform.                    " ZF_GET_SELECTED_ROWS
 *&---------------------------------------------------------------------*
 *&      Form  ZF_CREATE_SECOND_SPLITTER
@@ -529,7 +529,7 @@ form zf_create_second_splitter.
 
   create object v_splitter2
     exporting
-      parent            = v_grid2
+      parent            = v_second_grid
       rows              = 1
       columns           = 2
     exceptions
@@ -559,7 +559,7 @@ form zf_create_hotspot changing pt_fieldcat type lvc_t_fcat.
 
   loop at pt_fieldcat assigning <fs_fcat>.
 
-    if <fs_fcat>-fieldname eq 'MATNR'.
+    if <fs_fcat>-fieldname eq c_fieldname.
       <fs_fcat>-hotspot = abap_true.
     endif.
 
