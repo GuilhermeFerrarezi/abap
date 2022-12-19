@@ -49,12 +49,40 @@ end of y_cons_99,
 
 y_t_cons_99 type standard table of y_cons_99.
 
-data: v_row_id type lvc_s_roid.
-data: v_row_no type lvc_s_roid.
+data: v_row_id type lvc_s_roid,
+      v_row_no type lvc_s_roid.
+
+constants:
+begin of c_structure_name,
+  firstalv type dd02l-tabname value 'ZSTGF_ALV_SPLIT1',
+  secondalv type dd02l-tabname value 'ZSTGF_ALV_SPLIT2',
+  thirdalv type dd02l-tabname value 'ZSTGF_ALV_SPLIT3',
+end of c_structure_name,
+
+c_grid type c length 6 value 'V_GRID',
+
+begin of c_fieldname,
+  matnr type c length 5 value 'MATNR',
+end of c_fieldname,
+
+begin of c_ucomm,
+  back type ui_func value 'BACK',
+  canc type ui_func value 'CANC',
+  exit type ui_func value 'EXIT',
+  close type ui_func value 'CLOSE',
+  show type ui_func value 'SHOW',
+end of c_ucomm,
+
+begin of c_description,
+  close type iconquick value 'FECHAR',
+  show type iconquick value 'MOSTRAR',
+end of c_description.
+
 *----------------------------------------------------------------------*
 *       CLASS lcl_event_receiver DEFINITION
 *----------------------------------------------------------------------*
-class lcl_event_receiver definition.
+class lcl_event_receiver definition final.
+
   public section.
     class-methods: on_double_click
        for event double_click of cl_gui_alv_grid
@@ -86,8 +114,8 @@ class lcl_event_receiver definition.
 
 endclass.                    "lcl_event_receiver DEFINITION
 
-data: v_grid type ref to cl_gui_custom_container,
-      v_grid2 type ref to cl_gui_container,
+data: v_first_grid type ref to cl_gui_custom_container,
+      v_second_grid type ref to cl_gui_container,
       v_item_grid type ref to cl_gui_container,
       v_principal_grid type ref to cl_gui_container,
       v_detail_grid type ref to cl_gui_container,
