@@ -2,14 +2,12 @@
 *&  Include           ZTSGF_ALV_SPLIT_PAI
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*&      Module  USER_COMMAND_9010  INPUT
+*&      Module  USER_COMMAND_9000  INPUT
 *&---------------------------------------------------------------------*
-*       text
-*----------------------------------------------------------------------*
-module user_command_9010 input.
+module user_command_9000 input.
 
   case sy-ucomm.
-    when 'BACK' or 'CANC' or 'EXIT'.
+    when c_ucomm-back or c_ucomm-canc or c_ucomm-exit.
       set screen 0.
       leave screen.
   endcase.
