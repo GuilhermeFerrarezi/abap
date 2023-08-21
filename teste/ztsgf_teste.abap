@@ -166,9 +166,9 @@ selection-screen end of screen 9100.
 *
 *WRITE sy-dbcnt.
 
-data teste value '123'.
-data teste2 value '234'.
-assert teste = teste2.
+*data teste value '123'.
+*data teste2 value '234'.
+*assert teste = teste2.
 
 *LOOP AT t_mara INTO w_mara.
 *  CLEAR w_makt.
