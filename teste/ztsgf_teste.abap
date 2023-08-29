@@ -11,29 +11,61 @@ report  ztsgf_teste.
 *data: teste type char4 value '@3D@'.
 *WRITE teste.
 
-selection-screen begin of block b1.
-  parameters p_teste type mara-matnr.
-selection-screen end of block b1.
+*SELECTION-SCREEN BEGIN OF BLOCK b1.
+*PARAMETERS p_teste TYPE mara-matnr.
+*SELECTION-SCREEN END OF BLOCK b1.
+*
+*SELECTION-SCREEN BEGIN OF TABBED BLOCK tabstrip FOR 24 LINES.
+*SELECTION-SCREEN TAB (1) text-s10 USER-COMMAND 'STRD' DEFAULT SCREEN
+*9000.
+*SELECTION-SCREEN TAB (30) text-s11 USER-COMMAND 'EXTD' DEFAULT SCREEN
+*9100.
+*SELECTION-SCREEN END OF BLOCK tabstrip.
+*
+*SELECTION-SCREEN BEGIN OF SCREEN 9000 AS SUBSCREEN.
+*
+*PARAMETERS: p_teste1 TYPE mara-mtart.
+*
+*SELECTION-SCREEN END OF SCREEN 9000.
+*
+** Extended selection criteria
+*SELECTION-SCREEN BEGIN OF SCREEN 9100 AS SUBSCREEN.
+*
+*PARAMETERS: p_teste2 TYPE j_1bnfdoc-docnum.
+*
+*SELECTION-SCREEN END OF SCREEN 9100.
 
-selection-screen begin of tabbed block tabstrip for 24 lines.
-selection-screen tab (1) text-s10 user-command 'STRD' default screen
-9000.
-selection-screen tab (30) text-s11 user-command 'EXTD' default screen
-9100.
-selection-screen end of block tabstrip.
+data: lt_range type range of lagp-lgtyp.
 
-selection-screen begin of screen 9000 as subscreen.
+data: lw_t334t  type          t334t,
+      lt_t334t  type table of t334t.
+data: w_lgtyp   type lagp-lgtyp.
 
-  parameters: p_teste1 type mara-mtart.
+field-symbols: <fs_teste> type any.
 
-selection-screen end of screen 9000.
+refresh lt_t334t. clear lw_t334t.
+select * from t334t into table lt_t334t.    "TAB. T3334T é uma tabela bufferizada no BDD
+* WHERE lgnum = '210'
+*   AND kzear = 'A'
+*   AND lgtkz = gw_mlgn-ltkza
+*   AND bwref = '601' .
+if sy-subrc eq 0.
+  clear w_lgtyp.
+  loop at lt_t334t into lw_t334t.
 
-* Extended selection criteria
-selection-screen begin of screen 9100 as subscreen.
+    do.
+      assign component sy-index of structure lw_t334t to <fs_teste>.
+      if sy-subrc is not initial. exit. endif.
+    enddo.
 
-  parameters: p_teste2 type j_1bnfdoc-docnum.
+*    DO 30 TIMES VARYING w_lgtyp FROM lw_t334t-lgty0 NEXT lw_t334t-lgty1.
+*      CHECK w_lgtyp IN lt_range.
+**      it_pl01x-lgtyp = w_lgtyp.
+*      EXIT.
+*    ENDDO.
+  endloop.
 
-selection-screen end of screen 9100.
+endif.
 
 
 
@@ -166,9 +198,9 @@ selection-screen end of screen 9100.
 *
 *WRITE sy-dbcnt.
 
-*data teste value '123'.
-*data teste2 value '234'.
-*assert teste = teste2.
+*DATA teste VALUE '123'.
+*DATA teste2 VALUE '234'.
+*ASSERT teste = teste2.
 
 *LOOP AT t_mara INTO w_mara.
 *  CLEAR w_makt.
