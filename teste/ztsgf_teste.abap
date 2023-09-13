@@ -6,7 +6,7 @@
 *&
 *&---------------------------------------------------------------------*
 
-report  ztsgf_teste.
+REPORT  ztsgf_teste.
 
 *data: teste type char4 value '@3D@'.
 *WRITE teste.
@@ -35,37 +35,83 @@ report  ztsgf_teste.
 *
 *SELECTION-SCREEN END OF SCREEN 9100.
 
-data: lt_range type range of lagp-lgtyp.
-
-data: lw_t334t  type          t334t,
-      lt_t334t  type table of t334t.
-data: w_lgtyp   type lagp-lgtyp.
-
-field-symbols: <fs_teste> type any.
-
-refresh lt_t334t. clear lw_t334t.
-select * from t334t into table lt_t334t.    "TAB. T3334T é uma tabela bufferizada no BDD
+*DATA: lt_range TYPE RANGE OF lagp-lgtyp.
+*
+*DATA: lw_t334t  TYPE          t334t,
+*      lt_t334t  TYPE TABLE OF t334t.
+*DATA: w_lgtyp   TYPE lagp-lgtyp.
+*
+*FIELD-SYMBOLS: <fs_teste> TYPE ANY.
+*
+*REFRESH lt_t334t. CLEAR lw_t334t.
+*SELECT * FROM t334t INTO TABLE lt_t334t.    "TAB. T3334T é uma tabela bufferizada no BDD
 * WHERE lgnum = '210'
 *   AND kzear = 'A'
 *   AND lgtkz = gw_mlgn-ltkza
 *   AND bwref = '601' .
-if sy-subrc eq 0.
-  clear w_lgtyp.
-  loop at lt_t334t into lw_t334t.
-
-    do.
-      assign component sy-index of structure lw_t334t to <fs_teste>.
-      if sy-subrc is not initial. exit. endif.
-    enddo.
+*IF sy-subrc EQ 0.
+*  CLEAR w_lgtyp.
+*  LOOP AT lt_t334t INTO lw_t334t.
+*
+*    DO.
+*      ASSIGN COMPONENT sy-index OF STRUCTURE lw_t334t TO <fs_teste>.
+*      IF sy-subrc IS NOT INITIAL. EXIT. ENDIF.
+*    ENDDO.
 
 *    DO 30 TIMES VARYING w_lgtyp FROM lw_t334t-lgty0 NEXT lw_t334t-lgty1.
 *      CHECK w_lgtyp IN lt_range.
 **      it_pl01x-lgtyp = w_lgtyp.
 *      EXIT.
 *    ENDDO.
-  endloop.
+*  ENDLOOP.
 
-endif.
+*ENDIF.
+
+
+
+*CLASS lcl_teste DEFINITION.
+*
+*  PUBLIC SECTION.
+*
+*    CLASS-DATA: v_teste type string.
+*
+*    METHODS: m_escreve_na_tela.
+**             m_coloca_valor.
+*
+*ENDCLASS.                    "lcl_teste DEFINITION
+*
+*DATA: c_teste1 TYPE REF TO lcl_teste,
+*      c_teste2 TYPE REF TO lcl_teste.
+*
+*CREATE OBJECT c_teste1.
+*CREATE OBJECT c_teste2.
+*
+**c_teste1->v_teste = 'teste1'.
+*c_teste1->m_escreve_na_tela( ).
+*c_teste2->m_escreve_na_tela( ).
+*
+**----------------------------------------------------------------------*
+**       CLASS lcl_teste IMPLEMENTATION
+**----------------------------------------------------------------------*
+**
+**----------------------------------------------------------------------*
+*CLASS lcl_teste IMPLEMENTATION.
+*
+*  METHOD m_escreve_na_tela.
+*
+*    WRITE me->v_teste.
+**write v_teste.
+*
+*  ENDMETHOD.                    "m_escreve_na_tela
+*
+**  METHOD m_coloca_valor.
+**
+**    me->v_teste = 'teste'.
+**
+**  ENDMETHOD.                    "m_coloca_valor
+*
+*ENDCLASS.                    "lcl_teste IMPLEMENTATION
+
 
 
 
