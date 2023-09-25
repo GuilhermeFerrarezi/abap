@@ -8,6 +8,45 @@
 
 REPORT  ztsgf_teste.
 
+*DATA: w_zintsstt0062 TYPE zintsstt0062.
+
+TYPES: BEGIN OF y_teste,
+  matnr TYPE ztbtsgf_teste1-matnr,
+  mtart TYPE ztbtsgf_teste2-mtart,
+END OF y_teste,
+
+y_t_teste TYPE SORTED TABLE OF y_teste WITH NON-UNIQUE KEY matnr.
+
+DATA: t_teste TYPE y_t_teste.
+
+DATA: w_teste1 TYPE ztbtsgf_teste1.
+DATA: w_teste2 TYPE ztbtsgf_teste2.
+
+w_teste1-matnr = '1234'.
+MODIFY ztbtsgf_teste1 FROM w_teste1.
+
+w_teste2-matnr = '1234'.
+w_teste2-mtart = 'EI'.
+MODIFY ztbtsgf_teste2 FROM w_teste2.
+
+w_teste2-matnr = '1234'.
+w_teste2-mtart = 'IE'.
+MODIFY ztbtsgf_teste2 FROM w_teste2.
+
+COMMIT WORK AND WAIT.
+
+FIELD-SYMBOLS: <fs_teste> LIKE LINE OF t_teste.
+
+SELECT a~matnr b~mtart
+  FROM ztbtsgf_teste1 AS a
+  INNER JOIN ztbtsgf_teste2 AS b ON b~matnr EQ a~matnr
+  INTO TABLE t_teste
+  WHERE a~matnr EQ '1234'.
+
+LOOP AT t_teste ASSIGNING <fs_teste>.
+  WRITE: <fs_teste>-matnr, <fs_teste>-mtart, /.
+ENDLOOP.
+
 *data: teste type char4 value '@3D@'.
 *WRITE teste.
 
@@ -67,7 +106,7 @@ REPORT  ztsgf_teste.
 
 *ENDIF.
 
-
+*MESSAGE s000(oo) WITH 'TESTE' DISPLAY LIKE 'X'.
 
 *CLASS lcl_teste DEFINITION.
 *
@@ -220,7 +259,7 @@ REPORT  ztsgf_teste.
 *      w_makt LIKE LINE OF t_makt.
 *FIELD-SYMBOLS: <fs_mara> LIKE LINE OF t_mara,
 *               <fs_makt> LIKE LINE OF t_makt.
-**PERFORM zf_read_mara.
+*PERFORM zf_read_mara.
 **PERFORM zf_read_makt.
 *
 *DO 2 TIMES.
