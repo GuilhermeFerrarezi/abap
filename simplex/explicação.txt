@@ -1,0 +1,2 @@
+Essa pasta não está completa com todos os includes do programa usado para o simplex pois foi feito refresh no ambiente e eu perdi o programa inicial, porém a maior parte da lógica ficou salva e é isso que eu estou adicionando nesse repositório.
+O programa foi feito a um bom tempo atras ent tem coisa que daria pra fazer de forma muito melhor, como por exemplo o fato de eu ter criado uma função só pra inverter o sinal de um campo numérico, sendo que eu podia apenas multiplicar por -1.
